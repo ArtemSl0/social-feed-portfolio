@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     "feed",
 ]
 
+AUTH_USER_MODEL = "feed.User"
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
