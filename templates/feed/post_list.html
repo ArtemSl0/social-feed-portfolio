@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Feed</h1>
+  <ul>
+    {% for post in post_list %}
+      <li>{{ post.content }} - {{ post.author }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
