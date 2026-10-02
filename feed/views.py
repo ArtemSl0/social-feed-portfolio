@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from django.views import generic
 
-# Create your views here.
+from feed.models import Post
+
+
+class PostListView(generic.ListView):
+    model = Post
+    paginate_by = 5
