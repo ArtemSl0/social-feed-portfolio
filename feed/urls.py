@@ -5,7 +5,8 @@ from feed.views import (
     PostDetailView,
     PostCreateView,
     CommentCreateView,
-    toggle_reaction
+    toggle_reaction,
+    toggle_repost
 )
 
 urlpatterns = [
@@ -21,6 +22,11 @@ urlpatterns = [
         "posts/<int:pk>/react/<str:reaction>/",
         toggle_reaction,
         name="toggle-reaction",
+    ),
+    path(
+        "posts/<int:pk>/repost/",
+        toggle_repost,
+        name="toggle-repost",
     ),
 ]
 

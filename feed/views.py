@@ -5,7 +5,7 @@ from django.views import generic
 from django.urls import reverse_lazy
 
 from feed.forms import UserRegistrationForm, PostForm, CommentForm
-from feed.models import Post, User, Comment, Like
+from feed.models import Post, User, Comment, Like, Repost
 
 
 class PostListView(generic.ListView):
@@ -66,4 +66,17 @@ def toggle_reaction(request, pk, reaction):
         else:
             like.reaction = reaction
             like.save()
+    return redirect("feed:post-detail", pk=pk)
+
+
+@login_required
+def toggle_repost(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    repost = Repost.objects.filter(
+        user=request.user, original_post=post
+    ).first()
+    if repost:
+        repost.delete()
+    else:
+        Repost.objects.create(user=request.user, original_post=post)
     return redirect("feed:post-detail", pk=pk)
