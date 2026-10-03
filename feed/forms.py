@@ -20,3 +20,12 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ["text"]
+
+
+class PostSearchForm(forms.Form):
+    content = forms.CharField(
+        max_length=255,
+        required=False,
+        label="",
+        widget=forms.TextInput(attrs={"placeholder": "Search by content"}),
+    )

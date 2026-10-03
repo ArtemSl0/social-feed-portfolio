@@ -4,13 +4,35 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 from django.urls import reverse_lazy
 
-from feed.forms import UserRegistrationForm, PostForm, CommentForm
+from feed.forms import (
+    UserRegistrationForm,
+    PostForm,
+    CommentForm,
+    PostSearchForm
+)
 from feed.models import Post, User, Comment, Like, Repost
 
 
 class PostListView(generic.ListView):
     model = Post
     paginate_by = 5
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        content = self.request.GET.get("content", "")
+        context["search_form"] = PostSearchForm(
+            initial={"content": content}
+        )
+        return context
+
+    def get_queryset(self):
+        queryset = Post.objects.order_by("-created_at")
+        form = PostSearchForm(self.request.GET)
+        if form.is_valid():
+            return queryset.filter(
+                content__icontains=form.cleaned_data["content"]
+            )
+        return queryset
 
 
 class PostDetailView(generic.DetailView):
