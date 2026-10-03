@@ -4,4 +4,14 @@
   <h1>{{ post.content }}</h1>
   <p>{{ post.author }}</p>
   <p>{{ post.created_at }}</p>
+
+  <h3>Images</h3>
+  {% for image in post.images.all %}
+    <img src="{{ image.image.url }}" alt="post image">
+  {% endfor %}
+
+  <h3>Comments</h3>
+  {% for comment in post.comments.all %}
+    <p>{{ comment.author }}: {{ comment.text }}</p>
+  {% endfor %}
 {% endblock %}
