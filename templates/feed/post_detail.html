@@ -11,6 +11,17 @@
     <img src="{{ image.image.url }}" alt="post image">
   {% endfor %}
 
+  {% if user.is_authenticated %}
+    <form method="post" action="{% url 'feed:toggle-reaction' pk=post.pk reaction='like' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-outline-primary">Like</button>
+    </form>
+    <form method="post" action="{% url 'feed:toggle-reaction' pk=post.pk reaction='dislike' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-outline-danger">Dislike</button>
+    </form>
+  {% endif %}
+
   <h3>Comments</h3>
   {% for comment in post.comments.all %}
     <p>{{ comment.author }}: {{ comment.text }}</p>

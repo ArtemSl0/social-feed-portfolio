@@ -1,9 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 from django.urls import reverse_lazy
 
 from feed.forms import UserRegistrationForm, PostForm, CommentForm
-from feed.models import Post, User, Comment
+from feed.models import Post, User, Comment, Like
 
 
 class PostListView(generic.ListView):
@@ -50,3 +52,18 @@ class CommentCreateView(LoginRequiredMixin, generic.CreateView):
         return reverse_lazy(
             "feed:post-detail", kwargs={"pk": self.kwargs["pk"]}
         )
+
+
+@login_required
+def toggle_reaction(request, pk, reaction):
+    post = get_object_or_404(Post, pk=pk)
+    like, created = Like.objects.get_or_create(
+        user=request.user, post=post, defaults={"reaction": reaction}
+    )
+    if not created:
+        if like.reaction == reaction:
+            like.delete()
+        else:
+            like.reaction = reaction
+            like.save()
+    return redirect("feed:post-detail", pk=pk)

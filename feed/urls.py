@@ -4,7 +4,8 @@ from feed.views import (
     PostListView,
     PostDetailView,
     PostCreateView,
-    CommentCreateView
+    CommentCreateView,
+    toggle_reaction
 )
 
 urlpatterns = [
@@ -15,6 +16,11 @@ urlpatterns = [
         "posts/<int:pk>/comment/",
         CommentCreateView.as_view(),
         name="comment-create",
+    ),
+    path(
+        "posts/<int:pk>/react/<str:reaction>/",
+        toggle_reaction,
+        name="toggle-reaction",
     ),
 ]
 
