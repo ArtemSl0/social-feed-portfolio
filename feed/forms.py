@@ -29,3 +29,9 @@ class PostSearchForm(forms.Form):
         label="",
         widget=forms.TextInput(attrs={"placeholder": "Search by content"}),
     )
+    author = forms.CharField(
+        max_length=255,
+        required=False,
+        label="",
+        widget=forms.TextInput(attrs={"placeholder": "Search by author"}),
+    )

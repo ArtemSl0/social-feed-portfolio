@@ -20,8 +20,9 @@ class PostListView(generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         content = self.request.GET.get("content", "")
+        author = self.request.GET.get("author", "")
         context["search_form"] = PostSearchForm(
-            initial={"content": content}
+            initial={"content": content, "author": author}
         )
         return context
 
@@ -29,9 +30,14 @@ class PostListView(generic.ListView):
         queryset = Post.objects.order_by("-created_at")
         form = PostSearchForm(self.request.GET)
         if form.is_valid():
-            return queryset.filter(
-                content__icontains=form.cleaned_data["content"]
-            )
+            content = form.cleaned_data["content"]
+            author = form.cleaned_data["author"]
+            if content:
+                queryset = queryset.filter(content__icontains=content)
+            if author:
+                queryset = queryset.filter(
+                    author__username__icontains=author
+                )
         return queryset
 
 
