@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "feed",
+    "crispy_forms",
+    "crispy_bootstrap4",
 ]
 
 AUTH_USER_MODEL = "feed.User"
@@ -136,3 +138,6 @@ MAILERS = {
 LOGIN_REDIRECT_URL = "feed:index"
 LOGOUT_REDIRECT_URL = "feed:index"
 LOGIN_URL = "/login/"
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"

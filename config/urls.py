@@ -4,6 +4,8 @@ from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
 
+from feed.views import RegisterView
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("feed.urls", namespace="feed")),
@@ -13,6 +15,7 @@ urlpatterns = [
         name="login",
     ),
     path("logout/", LogoutView.as_view(), name="logout"),
+    path("register/", RegisterView.as_view(), name="register"),
 ]
 
 if settings.DEBUG:
