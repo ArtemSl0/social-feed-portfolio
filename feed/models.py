@@ -14,6 +14,14 @@ class Post(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def likes_count(self):
+        return self.likes.filter(reaction=Like.LIKE).count()
+
+    @property
+    def dislikes_count(self):
+        return self.likes.filter(reaction=Like.DISLIKE).count()
+
     def __str__(self):
         return f"{self.content[:30]} - {self.author}"
 
