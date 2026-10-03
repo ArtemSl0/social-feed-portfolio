@@ -6,6 +6,10 @@
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
+  {% block sidebar %}
+    {% include "includes/sidebar.html" %}
+  {% endblock %}
+
   {% block content %}
   {% endblock %}
 </body>
