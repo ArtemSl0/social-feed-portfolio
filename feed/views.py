@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 from django.urls import reverse_lazy
+from django.db.models import Q
 
 from feed.forms import (
     UserRegistrationForm,
@@ -19,24 +20,19 @@ class PostListView(generic.ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        content = self.request.GET.get("content", "")
-        author = self.request.GET.get("author", "")
-        context["search_form"] = PostSearchForm(
-            initial={"content": content, "author": author}
-        )
+        query = self.request.GET.get("query", "")
+        context["search_form"] = PostSearchForm(initial={"query": query})
         return context
 
     def get_queryset(self):
         queryset = Post.objects.order_by("-created_at")
         form = PostSearchForm(self.request.GET)
         if form.is_valid():
-            content = form.cleaned_data["content"]
-            author = form.cleaned_data["author"]
-            if content:
-                queryset = queryset.filter(content__icontains=content)
-            if author:
+            query = form.cleaned_data["query"]
+            if query:
                 queryset = queryset.filter(
-                    author__username__icontains=author
+                    Q(content__icontains=query)
+                    | Q(author__username__icontains=query)
                 )
         return queryset
 

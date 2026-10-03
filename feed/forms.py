@@ -23,15 +23,9 @@ class CommentForm(forms.ModelForm):
 
 
 class PostSearchForm(forms.Form):
-    content = forms.CharField(
+    query = forms.CharField(
         max_length=255,
         required=False,
         label="",
-        widget=forms.TextInput(attrs={"placeholder": "Search by content"}),
-    )
-    author = forms.CharField(
-        max_length=255,
-        required=False,
-        label="",
-        widget=forms.TextInput(attrs={"placeholder": "Search by author"}),
+        widget=forms.TextInput(attrs={"placeholder": "Search posts..."}),
     )
