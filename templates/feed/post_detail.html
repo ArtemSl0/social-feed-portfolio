@@ -25,7 +25,7 @@
       <button type="submit" class="btn btn-outline-secondary">Repost</button>
     </form>
   {% endif %}
-  <p>Likes: {{ post.likes_count }} <br> Dislikes: {{ post.dislikes_count }}</p>
+  <p>Likes: {{ post.likes_count }} <br> Dislikes: {{ post.dislikes_count }} <br> Reposts: {{ post.reposts_count }}</p>
 
   <h3>Comments</h3>
   {% for comment in post.comments.all %}

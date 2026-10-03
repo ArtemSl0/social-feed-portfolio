@@ -22,6 +22,10 @@ class Post(models.Model):
     def dislikes_count(self):
         return self.likes.filter(reaction=Like.DISLIKE).count()
 
+    @property
+    def reposts_count(self):
+        return self.reposts.count()
+
     def __str__(self):
         return f"{self.content[:30]} - {self.author}"
 
