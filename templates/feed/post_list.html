@@ -4,7 +4,10 @@
   <h1>Feed</h1>
   <ul>
     {% for post in post_list %}
-      <li>{{ post.content }} - {{ post.author }}</li>
+      <li>
+        <a href="{% url 'feed:post-detail' pk=post.id %}">{{ post.content }}</a>
+        - {{ post.author }}
+      </li>
     {% endfor %}
   </ul>
 {% endblock %}
