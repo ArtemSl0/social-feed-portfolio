@@ -63,6 +63,23 @@ class PostCreateView(LoginRequiredMixin, generic.CreateView):
         return super().form_valid(form)
 
 
+class PostUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Post
+    form_class = PostForm
+    success_url = reverse_lazy("feed:index")
+
+    def get_queryset(self):
+        return Post.objects.filter(author=self.request.user)
+
+
+class PostDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Post
+    success_url = reverse_lazy("feed:index")
+
+    def get_queryset(self):
+        return Post.objects.filter(author=self.request.user)
+
+
 class CommentCreateView(LoginRequiredMixin, generic.CreateView):
     model = Comment
     form_class = CommentForm

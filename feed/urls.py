@@ -6,7 +6,9 @@ from feed.views import (
     PostCreateView,
     CommentCreateView,
     toggle_reaction,
-    toggle_repost
+    toggle_repost,
+    PostUpdateView,
+    PostDeleteView
 )
 
 urlpatterns = [
@@ -27,6 +29,16 @@ urlpatterns = [
         "posts/<int:pk>/repost/",
         toggle_repost,
         name="toggle-repost",
+    ),
+    path(
+        "posts/<int:pk>/update/",
+        PostUpdateView.as_view(),
+        name="post-update",
+    ),
+    path(
+        "posts/<int:pk>/delete/",
+        PostDeleteView.as_view(),
+        name="post-delete",
     ),
 ]
 

@@ -5,6 +5,10 @@
   <h1>{{ post.content }}</h1>
   <p>{{ post.author }}</p>
   <p>{{ post.created_at }}</p>
+  {% if user == post.author %}
+    <a href="{% url 'feed:post-update' pk=post.pk %}" class="btn btn-secondary">Edit</a>
+    <a href="{% url 'feed:post-delete' pk=post.pk %}" class="btn btn-danger">Delete</a>
+  {% endif %}
 
   <h3>Images</h3>
   {% for image in post.images.all %}
