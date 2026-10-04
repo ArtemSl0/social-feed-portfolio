@@ -4,7 +4,10 @@
 {% block content %}
   <h1>{{ post.content }}</h1>
   <p>{{ post.author }}</p>
-  <p>{{ post.created_at }}</p>
+  <p>Created: {{ post.created_at }}</p>
+  {% if post.updated_at != post.created_at %}
+    <p>Updated: {{ post.updated_at }} <em>(edited)</em></p>
+  {% endif %}
   {% if user == post.author %}
     <a href="{% url 'feed:post-update' pk=post.pk %}" class="btn btn-secondary">Edit</a>
     <a href="{% url 'feed:post-delete' pk=post.pk %}" class="btn btn-danger">Delete</a>
