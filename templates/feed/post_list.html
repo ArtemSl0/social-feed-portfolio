@@ -13,7 +13,7 @@
     {% for post in post_list %}
       <li>
         <a href="{% url 'feed:post-detail' pk=post.id %}">{{ post.content }}</a>
-        - {{ post.author }} ({{ post.likes_count }} likes, {{ post.dislikes_count }} dislikes, {{ post.reposts_count }} reposts)
+        - <a href="{% url 'feed:user-detail' pk=post.author.pk %}">{{ post.author }}</a> ({{ post.likes_count }} likes, {{ post.dislikes_count }} dislikes, {{ post.reposts_count }} reposts)
       </li>
     {% endfor %}
   </ul>

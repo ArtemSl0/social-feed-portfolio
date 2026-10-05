@@ -133,3 +133,16 @@ def toggle_repost(request, pk):
     else:
         Repost.objects.create(user=request.user, original_post=post)
     return redirect("feed:post-detail", pk=pk)
+
+
+class UserDetailView(generic.DetailView):
+    model = User
+    context_object_name = "profile_user"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["posts"] = self.object.posts.order_by("-created_at")
+        context["reposts"] = self.object.reposts.select_related(
+            "original_post"
+        ).order_by("-created_at")
+        return context

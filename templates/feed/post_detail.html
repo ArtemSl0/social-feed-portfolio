@@ -3,7 +3,7 @@
 
 {% block content %}
   <h1>{{ post.content }}</h1>
-  <p>{{ post.author }}</p>
+  <p><a href="{% url 'feed:user-detail' pk=post.author.pk %}">{{ post.author }}</a></p>
   <p>Created: {{ post.created_at }}</p>
   {% if post.updated_at != post.created_at %}
     <p>Updated: {{ post.updated_at }} <em>(edited)</em></p>
@@ -36,7 +36,7 @@
 
   <h3>Comments</h3>
   {% for comment in post.comments.all %}
-    <p>{{ comment.author }}: {{ comment.text }}</p>
+    <p><a href="{% url 'feed:user-detail' pk=comment.author.pk %}">{{ comment.author }}</a>: {{ comment.text }}</p>
   {% endfor %}
   {% if user.is_authenticated %}
   <form method="post" action="{% url 'feed:comment-create' pk=post.pk %}">

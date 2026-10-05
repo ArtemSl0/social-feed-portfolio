@@ -8,7 +8,7 @@ from feed.views import (
     toggle_reaction,
     toggle_repost,
     PostUpdateView,
-    PostDeleteView
+    PostDeleteView, UserDetailView
 )
 
 urlpatterns = [
@@ -39,6 +39,11 @@ urlpatterns = [
         "posts/<int:pk>/delete/",
         PostDeleteView.as_view(),
         name="post-delete",
+    ),
+    path(
+        "users/<int:pk>/",
+        UserDetailView.as_view(),
+        name="user-detail",
     ),
 ]
 

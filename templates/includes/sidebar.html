@@ -1,5 +1,5 @@
 {% if user.is_authenticated %}
-  <p>{{ user.username }}</p>
+  <p><a href="{% url 'feed:user-detail' pk=user.pk %}">{{ user.username }}</a></p>
   <form method="post" action="{% url 'logout' %}">
     {% csrf_token %}
     <button type="submit">Logout</button>

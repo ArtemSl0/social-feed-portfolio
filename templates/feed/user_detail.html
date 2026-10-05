@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>{{ profile_user.username }}</h1>
+  <p>{{ profile_user.bio }}</p>
+
+  <h3>Posts</h3>
+  <ul>
+    {% for post in posts %}
+      <li>
+        <a href="{% url 'feed:post-detail' pk=post.pk %}">{{ post.content }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h3>Reposts</h3>
+  <ul>
+    {% for repost in reposts %}
+      <li>
+        <a href="{% url 'feed:post-detail' pk=repost.original_post.pk %}">{{ repost.original_post.content }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
