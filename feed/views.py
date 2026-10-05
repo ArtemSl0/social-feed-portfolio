@@ -15,7 +15,16 @@ from feed.forms import (
     CommentForm,
     PostSearchForm
 )
-from feed.models import Post, User, Comment, Like, Repost
+from feed.models import (
+    Post,
+    User,
+    Comment,
+    Like,
+    Repost,
+    PostImage
+)
+
+from PIL import Image as PILImage
 
 
 class PostListView(generic.ListView):
@@ -64,7 +73,15 @@ class PostCreateView(LoginRequiredMixin, generic.CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        images = self.request.FILES.getlist("images")
+        for image in images:
+            try:
+                PILImage.open(image).verify()
+                PostImage.objects.create(post=self.object, image=image)
+            except Exception:
+                continue
+        return response
 
 
 class PostUpdateView(LoginRequiredMixin, generic.UpdateView):

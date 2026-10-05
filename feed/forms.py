@@ -10,7 +10,18 @@ class UserRegistrationForm(UserCreationForm):
         fields = UserCreationForm.Meta.fields + ("email", "bio")
 
 
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
 class PostForm(forms.ModelForm):
+    images = forms.FileField(
+        widget=MultipleFileInput(
+            attrs={"multiple": True, "accept": "image/*"}
+        ),
+        required=False,
+    )
+
     class Meta:
         model = Post
         fields = ["content"]
