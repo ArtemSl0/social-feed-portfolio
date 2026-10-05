@@ -7,7 +7,7 @@ from feed.models import User, Post, Comment
 class UserRegistrationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = UserCreationForm.Meta.fields + ("bio",)
+        fields = UserCreationForm.Meta.fields + ("email", "bio")
 
 
 class PostForm(forms.ModelForm):
@@ -20,6 +20,14 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ["text"]
+
+    def clean_text(self):
+        text = self.cleaned_data["text"]
+        if len(text) > 280:
+            raise forms.ValidationError(
+                "Comment is too long (max 280 characters)."
+            )
+        return text
 
 
 class PostSearchForm(forms.Form):
