@@ -1,24 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>{{ profile_user.username }}</h1>
-  <p>{{ profile_user.bio }}</p>
+  <div class="post-card">
+    <h2>{{ profile_user.username }}</h2>
+    <p class="post-meta">{{ profile_user.bio }}</p>
+  </div>
 
-  <h3>Posts</h3>
-  <ul>
-    {% for post in posts %}
-      <li>
-        <a href="{% url 'feed:post-detail' pk=post.pk %}">{{ post.content }}</a>
-      </li>
-    {% endfor %}
-  </ul>
+  <h4 class="mt-4">Posts</h4>
+  {% for post in posts %}
+    <div class="post-card">
+      <a href="{% url 'feed:post-detail' pk=post.pk %}">
+        {{ post.content|truncatechars:80 }}
+      </a>
+    </div>
+  {% empty %}
+    <p class="post-meta">No posts yet.</p>
+  {% endfor %}
 
-  <h3>Reposts</h3>
-  <ul>
-    {% for repost in reposts %}
-      <li>
-        <a href="{% url 'feed:post-detail' pk=repost.original_post.pk %}">{{ repost.original_post.content }}</a>
-      </li>
-    {% endfor %}
-  </ul>
+  <h4 class="mt-4">Reposts</h4>
+  {% for repost in reposts %}
+    <div class="post-card">
+      <a href="{% url 'feed:post-detail' pk=repost.original_post.pk %}">
+        {{ repost.original_post.content|truncatechars:80 }}
+      </a>
+    </div>
+  {% empty %}
+    <p class="post-meta">No reposts yet.</p>
+  {% endfor %}
 {% endblock %}

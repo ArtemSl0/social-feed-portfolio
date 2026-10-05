@@ -1,13 +1,27 @@
-{% if user.is_authenticated %}
-  <p><a href="{% url 'feed:user-detail' pk=user.pk %}">{{ user.username }}</a></p>
-  <form method="post" action="{% url 'logout' %}">
-    {% csrf_token %}
-    <button type="submit">Logout</button>
-  </form>
-{% else %}
-  <a href="{% url 'login' %}">Login</a>
-  <a href="{% url 'register' %}">Register</a>
-{% endif %}
+<div class="mb-4">
+  {% if user.is_authenticated %}
+    <p class="mb-2">
+      <a href="{% url 'feed:user-detail' pk=user.pk %}" class="fw-bold">
+        {{ user.username }}
+      </a>
+    </p>
+    <form method="post" action="{% url 'logout' %}" class="mb-3">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+        Logout
+      </button>
+    </form>
+  {% else %}
+    <div class="d-grid gap-2 mb-3">
+      <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm">
+        Login
+      </a>
+      <a href="{% url 'register' %}" class="btn btn-primary btn-sm">
+        Register
+      </a>
+    </div>
+  {% endif %}
+</div>
 
 <ul class="sidebar-nav">
   <li><a href="{% url 'feed:index' %}">Feed</a></li>

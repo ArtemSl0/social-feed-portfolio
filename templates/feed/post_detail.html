@@ -2,46 +2,80 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <h1>{{ post.content }}</h1>
-  <p><a href="{% url 'feed:user-detail' pk=post.author.pk %}">{{ post.author }}</a></p>
-  <p>Created: {{ post.created_at }}</p>
-  {% if post.updated_at != post.created_at %}
-    <p>Updated: {{ post.updated_at }} <em>(edited)</em></p>
-  {% endif %}
-  {% if user == post.author %}
-    <a href="{% url 'feed:post-update' pk=post.pk %}" class="btn btn-secondary">Edit</a>
-    <a href="{% url 'feed:post-delete' pk=post.pk %}" class="btn btn-danger">Delete</a>
-  {% endif %}
+  <div class="post-card">
+    <h2>{{ post.content }}</h2>
+    <p class="post-meta">
+      by
+      <a href="{% url 'feed:user-detail' pk=post.author.pk %}">
+        {{ post.author }}
+      </a>
+    </p>
+    <p class="post-meta">
+      Created: {{ post.created_at|date:"d M Y, H:i" }}
+      {% if post.updated_at != post.created_at %}
+        · Updated: {{ post.updated_at|date:"d M Y, H:i" }} <em>(edited)</em>
+      {% endif %}
+    </p>
 
-  <h3>Images</h3>
-  {% for image in post.images.all %}
-    <img src="{{ image.image.url }}" alt="post image">
-  {% endfor %}
+    {% if user == post.author %}
+      <div class="mb-3">
+        <a href="{% url 'feed:post-update' pk=post.pk %}" class="btn btn-sm btn-secondary">
+          Edit
+        </a>
+        <a href="{% url 'feed:post-delete' pk=post.pk %}" class="btn btn-sm btn-danger">
+          Delete
+        </a>
+      </div>
+    {% endif %}
 
-{% if user.is_authenticated %}
-  <form method="post" action="{% url 'feed:toggle-reaction' pk=post.pk reaction='like' %}">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-outline-primary">Like ({{ post.likes_count }})</button>
-  </form>
-  <form method="post" action="{% url 'feed:toggle-reaction' pk=post.pk reaction='dislike' %}">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-outline-danger">Dislike ({{ post.dislikes_count }})</button>
-  </form>
-  <form method="post" action="{% url 'feed:toggle-repost' pk=post.pk %}">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-outline-secondary">Repost ({{ post.reposts_count }})</button>
-  </form>
-{% endif %}
+    {% if post.images.all %}
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        {% for image in post.images.all %}
+          <img src="{{ image.image.url }}" alt="post image" class="rounded" style="max-width: 200px;">
+        {% endfor %}
+      </div>
+    {% endif %}
 
-  <h3>Comments</h3>
+    {% if user.is_authenticated %}
+      <div class="d-flex gap-2 mb-3">
+        <form method="post" action="{% url 'feed:toggle-reaction' pk=post.pk reaction='like' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-primary btn-sm">
+            Like ({{ post.likes_count }})
+          </button>
+        </form>
+        <form method="post" action="{% url 'feed:toggle-reaction' pk=post.pk reaction='dislike' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger btn-sm">
+            Dislike ({{ post.dislikes_count }})
+          </button>
+        </form>
+        <form method="post" action="{% url 'feed:toggle-repost' pk=post.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-secondary btn-sm">
+            Repost ({{ post.reposts_count }})
+          </button>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+
+  <h4 class="mt-4">Comments</h4>
   {% for comment in post.comments.all %}
-    <p><a href="{% url 'feed:user-detail' pk=comment.author.pk %}">{{ comment.author }}</a>: {{ comment.text }}</p>
+    <div class="post-card">
+      <a href="{% url 'feed:user-detail' pk=comment.author.pk %}">
+        {{ comment.author }}
+      </a>: {{ comment.text }}
+    </div>
+  {% empty %}
+    <p class="post-meta">No comments yet.</p>
   {% endfor %}
+
   {% if user.is_authenticated %}
-  <form method="post" action="{% url 'feed:comment-create' pk=post.pk %}">
-    {% csrf_token %}
-    {{ comment_form|crispy }}
-    <button type="submit" class="btn btn-primary">Add comment</button>
-  </form>
-{% endif %}
+    <form method="post" action="{% url 'feed:comment-create' pk=post.pk %}" class="mt-3">
+      {% csrf_token %}
+      {{ comment_form|crispy }}
+      <button type="submit" class="btn btn-primary mt-2">Add comment</button>
+    </form>
+  {% endif %}
 {% endblock %}
