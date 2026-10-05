@@ -3,11 +3,15 @@
 
 {% block content %}
   <div class="post-card" style="max-width: 500px;">
-    <h2 class="mb-3">Create post</h2>
+    <h2 class="mb-3">
+      {% if post %}Edit post{% else %}Create post{% endif %}
+    </h2>
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form|crispy }}
-      <button type="submit" class="btn btn-primary w-100 mt-2">Save</button>
+      <button type="submit" class="btn btn-primary w-100 mt-2">
+        {% if post %}Update{% else %}Save{% endif %}
+      </button>
     </form>
   </div>
 {% endblock %}
