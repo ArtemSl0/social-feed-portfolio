@@ -142,3 +142,14 @@ textarea::placeholder {
 .search-input::placeholder {
   color: var(--text-muted);
 }
+
+.helptext,
+span.helptext,
+div.helptext,
+.form-text {
+  color: var(--text-muted) !important;
+  font-size: 0.85rem;
+  display: block;
+  margin-top: 4px;
+  margin-bottom: 10px;
+}
