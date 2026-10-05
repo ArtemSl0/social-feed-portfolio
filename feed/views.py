@@ -1,6 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render
+)
 from django.views import generic
 from django.urls import reverse_lazy
 from django.db.models import Q
@@ -88,6 +92,14 @@ class CommentCreateView(LoginRequiredMixin, generic.CreateView):
         form.instance.author = self.request.user
         form.instance.post_id = self.kwargs["pk"]
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        post = get_object_or_404(Post, pk=self.kwargs["pk"])
+        context = {
+            "post": post,
+            "comment_form": form,
+        }
+        return render(self.request, "feed/post_detail.html", context)
 
     def get_success_url(self):
         return reverse_lazy(
