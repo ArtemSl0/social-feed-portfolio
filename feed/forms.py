@@ -31,6 +31,16 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ["text"]
+        labels = {"text": ""}
+        widgets = {
+            "text": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 2,
+                    "placeholder": "Write a comment...",
+                }
+            )
+        }
 
     def clean_text(self):
         text = self.cleaned_data["text"]

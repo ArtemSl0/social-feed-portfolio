@@ -96,3 +96,9 @@ a:hover {
   border-color: var(--accent);
   box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25);
 }
+
+.form-control::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}

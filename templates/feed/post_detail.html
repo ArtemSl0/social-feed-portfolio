@@ -28,13 +28,27 @@
       </div>
     {% endif %}
 
-    {% if post.images.all %}
-      <div class="d-flex flex-wrap gap-2 mb-3">
-        {% for image in post.images.all %}
-          <img src="{{ image.image.url }}" alt="post image" class="rounded" style="max-width: 200px;">
-        {% endfor %}
-      </div>
-    {% endif %}
+  {% if post.images.all %}
+    <div class="d-flex flex-wrap gap-2 mb-3">
+      {% for image in post.images.all %}
+        <img
+          src="{{ image.image.url }}"
+          alt="post image"
+          class="rounded"
+          style="max-width: 200px; cursor: pointer;"
+          data-bs-toggle="modal"
+          data-bs-target="#imageModal{{ image.id }}"
+        >
+        <div class="modal fade" id="imageModal{{ image.id }}" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-transparent border-0">
+              <img src="{{ image.image.url }}" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
 
     {% if user.is_authenticated %}
       <div class="d-flex gap-2 mb-3">
