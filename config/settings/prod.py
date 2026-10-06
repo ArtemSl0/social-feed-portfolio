@@ -2,11 +2,7 @@ import os
 from .base import *
 
 DEBUG = False
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    "olimp-social-feed.onrender.com",
-]
+ALLOWED_HOSTS = ["olimp-social-feed.onrender.com"]
 
 DATABASES = {
     "default": {
