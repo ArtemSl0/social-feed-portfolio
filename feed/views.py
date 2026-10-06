@@ -74,13 +74,17 @@ class PostCreateView(LoginRequiredMixin, generic.CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         response = super().form_valid(form)
+
         images = self.request.FILES.getlist("images")
         for image in images:
             try:
                 PILImage.open(image).verify()
+                image.seek(0)
+
                 PostImage.objects.create(post=self.object, image=image)
-            except Exception:
+            except Exception as e:
                 continue
+
         return response
 
 
