@@ -153,3 +153,7 @@ div.helptext,
   margin-top: 4px;
   margin-bottom: 10px;
 }
+
+.preserve-newlines {
+  white-space: pre-line;
+}

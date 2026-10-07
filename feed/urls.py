@@ -8,7 +8,9 @@ from feed.views import (
     toggle_reaction,
     toggle_repost,
     PostUpdateView,
-    PostDeleteView, UserDetailView
+    PostDeleteView,
+    UserDetailView,
+    delete_comment
 )
 
 urlpatterns = [
@@ -45,6 +47,11 @@ urlpatterns = [
         UserDetailView.as_view(),
         name="user-detail",
     ),
+    path(
+        "comments/<int:pk>/delete/",
+        delete_comment,
+        name="comment-delete",
+),
 ]
 
 app_name = "feed"

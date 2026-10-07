@@ -3,7 +3,7 @@
 
 {% block content %}
   <div class="post-card">
-    <h2>{{ post.content }}</h2>
+  <h2 class="preserve-newlines">{{ post.content }}</h2>
     <p class="post-meta">
       by
       <a href="{% url 'feed:user-detail' pk=post.author.pk %}">
@@ -12,7 +12,7 @@
     </p>
     <p class="post-meta">
       Created: {{ post.created_at|date:"d M Y, H:i" }}
-      {% if post.updated_at != post.created_at %}
+      {% if post.is_edited %}
         · Updated: {{ post.updated_at|date:"d M Y, H:i" }} <em>(edited)</em>
       {% endif %}
     </p>
@@ -75,15 +75,21 @@
   </div>
 
   <h4 class="mt-4">Comments</h4>
-  {% for comment in post.comments.all %}
-    <div class="post-card">
-      <a href="{% url 'feed:user-detail' pk=comment.author.pk %}">
-        {{ comment.author }}
-      </a>: {{ comment.text }}
-    </div>
-  {% empty %}
-    <p class="post-meta">No comments yet.</p>
-  {% endfor %}
+    {% for comment in post.comments.all %}
+      <div class="post-card">
+        <a href="{% url 'feed:user-detail' pk=comment.author.pk %}">
+          {{ comment.author }}
+        </a>: <span class="preserve-newlines">{{ comment.text }}</span>
+        {% if user == comment.author %}
+          <form method="post" action="{% url 'feed:comment-delete' pk=comment.pk %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-danger ms-2">Delete</button>
+          </form>
+        {% endif %}
+      </div>
+    {% empty %}
+      <p class="post-meta">No comments yet.</p>
+    {% endfor %}
 
   {% if user.is_authenticated %}
     <form method="post" action="{% url 'feed:comment-create' pk=post.pk %}" class="mt-3">

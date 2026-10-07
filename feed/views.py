@@ -66,6 +66,17 @@ class RegisterView(generic.CreateView):
     template_name = "registration/register.html"
 
 
+def save_uploaded_images(request, post):
+    images = request.FILES.getlist("images")
+    for image in images:
+        try:
+            PILImage.open(image).verify()
+            image.seek(0)
+            PostImage.objects.create(post=post, image=image)
+        except Exception:
+            continue
+
+
 class PostCreateView(LoginRequiredMixin, generic.CreateView):
     model = Post
     form_class = PostForm
@@ -74,17 +85,7 @@ class PostCreateView(LoginRequiredMixin, generic.CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         response = super().form_valid(form)
-
-        images = self.request.FILES.getlist("images")
-        for image in images:
-            try:
-                PILImage.open(image).verify()
-                image.seek(0)
-
-                PostImage.objects.create(post=self.object, image=image)
-            except Exception as e:
-                continue
-
+        save_uploaded_images(self.request, self.object)
         return response
 
 
@@ -95,6 +96,11 @@ class PostUpdateView(LoginRequiredMixin, generic.UpdateView):
 
     def get_queryset(self):
         return Post.objects.filter(author=self.request.user)
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        save_uploaded_images(self.request, self.object)
+        return response
 
 
 class PostDeleteView(LoginRequiredMixin, generic.DeleteView):
@@ -126,6 +132,14 @@ class CommentCreateView(LoginRequiredMixin, generic.CreateView):
         return reverse_lazy(
             "feed:post-detail", kwargs={"pk": self.kwargs["pk"]}
         )
+
+
+@login_required
+def delete_comment(request, pk):
+    comment = get_object_or_404(Comment, pk=pk, author=request.user)
+    post_pk = comment.post_id
+    comment.delete()
+    return redirect("feed:post-detail", pk=post_pk)
 
 
 @login_required

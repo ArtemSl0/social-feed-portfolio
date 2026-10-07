@@ -24,6 +24,10 @@ class Post(models.Model):
         return self.likes.filter(reaction=Like.DISLIKE).count()
 
     @property
+    def is_edited(self):
+        return (self.updated_at - self.created_at).total_seconds() > 1
+
+    @property
     def reposts_count(self):
         return self.reposts.count()
 

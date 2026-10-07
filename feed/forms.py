@@ -7,7 +7,10 @@ from feed.models import User, Post, Comment
 class UserRegistrationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = UserCreationForm.Meta.fields + ("email", "bio")
+        fields = UserCreationForm.Meta.fields + ("email", "bio", "avatar")
+        widgets = {
+            "bio": forms.Textarea(attrs={"rows": 3}),
+        }
 
 
 class MultipleFileInput(forms.ClearableFileInput):
