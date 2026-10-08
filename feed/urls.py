@@ -10,7 +10,8 @@ from feed.views import (
     PostUpdateView,
     PostDeleteView,
     UserDetailView,
-    delete_comment
+    delete_comment,
+    ProfileUpdateView
 )
 
 urlpatterns = [
@@ -51,7 +52,12 @@ urlpatterns = [
         "comments/<int:pk>/delete/",
         delete_comment,
         name="comment-delete",
-),
+    ),
+    path(
+        "profile/edit/",
+        ProfileUpdateView.as_view(),
+        name="profile-update",
+    ),
 ]
 
 app_name = "feed"

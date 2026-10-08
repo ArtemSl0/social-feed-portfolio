@@ -13,7 +13,8 @@ from feed.forms import (
     UserRegistrationForm,
     PostForm,
     CommentForm,
-    PostSearchForm
+    PostSearchForm,
+    ProfileUpdateForm
 )
 from feed.models import (
     Post,
@@ -181,3 +182,17 @@ class UserDetailView(generic.DetailView):
             "original_post"
         ).order_by("-created_at")
         return context
+
+
+class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = User
+    form_class = ProfileUpdateForm
+    template_name = "feed/profile_form.html"
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "feed:user-detail", kwargs={"pk": self.request.user.pk}
+        )

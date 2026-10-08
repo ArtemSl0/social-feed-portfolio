@@ -75,3 +75,12 @@ class PostSearchForm(forms.Form):
         label="",
         widget=forms.TextInput(attrs={"placeholder": "Search posts..."}),
     )
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["avatar", "bio", "email"]
+        widgets = {
+            "bio": forms.Textarea(attrs={"rows": 3}),
+        }
