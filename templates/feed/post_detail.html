@@ -75,8 +75,12 @@
   </div>
 
   <h4 class="mt-4">Comments</h4>
-    {% for comment in post.comments.all %}
-      <div class="post-card">
+{% for comment in post.comments.all %}
+    <div class="post-card d-flex gap-2 align-items-start">
+      {% if comment.author.avatar %}
+        <img src="{{ comment.author.avatar.url }}" alt="avatar" class="rounded-circle" style="width: 32px; height: 32px; object-fit: cover;">
+      {% endif %}
+      <div>
         <a href="{% url 'feed:user-detail' pk=comment.author.pk %}">
           {{ comment.author }}
         </a>: <span class="preserve-newlines">{{ comment.text }}</span>
@@ -87,9 +91,10 @@
           </form>
         {% endif %}
       </div>
-    {% empty %}
-      <p class="post-meta">No comments yet.</p>
-    {% endfor %}
+    </div>
+  {% empty %}
+    <p class="post-meta">No comments yet.</p>
+  {% endfor %}
 
   {% if user.is_authenticated %}
     <form method="post" action="{% url 'feed:comment-create' pk=post.pk %}" class="mt-3">
