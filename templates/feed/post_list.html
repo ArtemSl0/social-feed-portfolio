@@ -10,15 +10,15 @@
   {% endif %}
 
   {% for post in post_list %}
-    <div class="post-card">
+    <div class="post-card position-relative">
       <h5>
-        <a href="{% url 'feed:post-detail' pk=post.id %}">
+        <a href="{% url 'feed:post-detail' pk=post.id %}" class="stretched-link text-reset">
           <span class="preserve-newlines">{{ post.content|truncatechars:80 }}</span>
         </a>
       </h5>
       <p class="post-meta">
         by
-        <a href="{% url 'feed:user-detail' pk=post.author.pk %}">
+        <a href="{% url 'feed:user-detail' pk=post.author.pk %}" class="position-relative" style="z-index: 2;">
           {{ post.author }}
         </a>
         · {{ post.created_at|date:"d M Y, H:i" }}
@@ -30,7 +30,7 @@
       </p>
     </div>
   {% empty %}
-    <p>No posts yet.</p>
+  <p>No posts yet.</p>
   {% endfor %}
 
   {% if is_paginated %}
