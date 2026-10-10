@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <div class="post-card">
+  <h2 class="preserve-newlines">{{ post.content }}</h2>
+    <p class="post-meta">
+      by
+      <a href="{% url 'feed:user-detail' pk=post.author.pk %}">
+        {{ post.author }}
+      </a>
+    </p>
+    <p class="post-meta">
+      Created: {{ post.created_at|date:"d M Y, H:i" }}
+      {% if post.is_edited %}
+        · Updated: {{ post.updated_at|date:"d M Y, H:i" }} <em>(edited)</em>
+      {% endif %}
+    </p>
+
+    {% if user == post.author %}
+      <div class="mb-3">
+        <a href="{% url 'feed:post-update' pk=post.pk %}" class="btn btn-sm btn-secondary">
+          Edit
+        </a>
+        <a href="{% url 'feed:post-delete' pk=post.pk %}" class="btn btn-sm btn-danger">
+          Delete
+        </a>
+      </div>
+    {% endif %}
+
+  {% if post.images.all %}
+    <div class="d-flex flex-wrap gap-2 mb-3">
+      {% for image in post.images.all %}
+        <img
+          src="{{ image.image.url }}"
+          alt="post image"
+          class="rounded"
+          style="max-width: 200px; cursor: pointer;"
+          data-bs-toggle="modal"
+          data-bs-target="#imageModal{{ image.id }}"
+        >
+        <div class="modal fade" id="imageModal{{ image.id }}" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-transparent border-0">
+              <img src="{{ image.image.url }}" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+    {% if user.is_authenticated %}
+      <div class="d-flex gap-2 mb-3">
+        <form method="post" action="{% url 'feed:toggle-reaction' pk=post.pk reaction='like' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-primary btn-sm">
+            Like ({{ post.likes_count }})
+          </button>
+        </form>
+        <form method="post" action="{% url 'feed:toggle-reaction' pk=post.pk reaction='dislike' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger btn-sm">
+            Dislike ({{ post.dislikes_count }})
+          </button>
+        </form>
+        <form method="post" action="{% url 'feed:toggle-repost' pk=post.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-secondary btn-sm">
+            Repost ({{ post.reposts_count }})
+          </button>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+
+  <h4 class="mt-4">Comments</h4>
+{% for comment in post.comments.all %}
+    <div class="post-card d-flex gap-2 align-items-start">
+      {% if comment.author.avatar %}
+        <img src="{{ comment.author.avatar.url }}" alt="avatar" class="rounded-circle" style="width: 32px; height: 32px; object-fit: cover;">
+      {% endif %}
+      <div>
+        <a href="{% url 'feed:user-detail' pk=comment.author.pk %}">
+          {{ comment.author }}
+        </a>: <span class="preserve-newlines">{{ comment.text }}</span>
+        {% if user == comment.author %}
+          <form method="post" action="{% url 'feed:comment-delete' pk=comment.pk %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-danger ms-2">Delete</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <p class="post-meta">No comments yet.</p>
+  {% endfor %}
+
+  {% if user.is_authenticated %}
+    <form method="post" action="{% url 'feed:comment-create' pk=post.pk %}" class="mt-3">
+      {% csrf_token %}
+      {{ comment_form|crispy }}
+      <button type="submit" class="btn btn-primary mt-2">Add comment</button>
+    </form>
+  {% endif %}
+{% endblock %}
