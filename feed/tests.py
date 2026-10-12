@@ -22,42 +22,42 @@ class ToggleReactionTests(TestCase):
         self.client.force_login(self.user)
         self.post = Post.objects.create(author=self.user, content="Test post")
 
-    def test_Reaction_creates_reaction(self):
+    def test_like_creates_reaction(self):
         self.client.post(
             reverse(
                 "feed:toggle-reaction",
-                kwargs={"pk": self.post.pk, "reaction": "Reaction"},
+                kwargs={"pk": self.post.pk, "reaction": "like"},
             )
         )
         self.post.refresh_from_db()
-        self.assertEqual(self.post.Reactions_count, 1)
+        self.assertEqual(self.post.likes_count, 1)
 
-    def test_Reaction_twice_removes_reaction(self):
+    def test_like_twice_removes_reaction(self):
         url = reverse(
             "feed:toggle-reaction",
-            kwargs={"pk": self.post.pk, "reaction": "Reaction"},
+            kwargs={"pk": self.post.pk, "reaction": "like"},
         )
         self.client.post(url)
         self.client.post(url)
         self.post.refresh_from_db()
-        self.assertEqual(self.post.Reactions_count, 0)
+        self.assertEqual(self.post.likes_count, 0)
 
-    def test_switch_from_Reaction_to_disReaction(self):
+    def test_switch_from_like_to_dislike(self):
         self.client.post(
             reverse(
                 "feed:toggle-reaction",
-                kwargs={"pk": self.post.pk, "reaction": "Reaction"},
+                kwargs={"pk": self.post.pk, "reaction": "like"},
             )
         )
         self.client.post(
             reverse(
                 "feed:toggle-reaction",
-                kwargs={"pk": self.post.pk, "reaction": "disReaction"},
+                kwargs={"pk": self.post.pk, "reaction": "dislike"},
             )
         )
         self.post.refresh_from_db()
-        self.assertEqual(self.post.Reactions_count, 0)
-        self.assertEqual(self.post.disReactions_count, 1)
+        self.assertEqual(self.post.likes_count, 0)
+        self.assertEqual(self.post.dislikes_count, 1)
 
 
 class ToggleRepostTests(TestCase):
@@ -98,11 +98,11 @@ class AccessControlTests(TestCase):
         response = self.client.get(reverse("feed:post-create"))
         self.assertNotEqual(response.status_code, 200)
 
-    def test_anonymous_cannot_toggle_Reaction(self):
+    def test_anonymous_cannot_toggle_reaction(self):
         response = self.client.post(
             reverse(
                 "feed:toggle-reaction",
-                kwargs={"pk": self.post.pk, "reaction": "Reaction"},
+                kwargs={"pk": self.post.pk, "reaction": "like"},
             )
         )
         self.assertNotEqual(response.status_code, 200)
