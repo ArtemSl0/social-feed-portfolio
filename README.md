@@ -1,4 +1,6 @@
 ## Social Feed — Custom Portfolio Project
+Link to Website
+https://olimp-social-feed.onrender.com
 
 A Django-based social media feed application (Instagram/Reddit-style), 
 built as a custom portfolio project following the same architecture 
@@ -43,6 +45,3 @@ Django, Bootstrap 5, django-crispy-forms, Pillow, SQLite
 Covers model string representations, the like/dislike toggle logic 
 (including state switching), repost toggling, and access control for 
 unauthenticated users.
-
-Link to Website
-https://olimp-social-feed.onrender.com
