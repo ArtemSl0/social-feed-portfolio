@@ -20,7 +20,7 @@ from feed.models import (
     Post,
     User,
     Comment,
-    Like,
+    Reaction,
     Repost,
     PostImage
 )
@@ -39,7 +39,7 @@ class PostListView(generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = Post.objects.order_by("-created_at")
+        queryset = Post.objects.select_related("author").order_by("-created_at")
         form = PostSearchForm(self.request.GET)
         if form.is_valid():
             query = form.cleaned_data["query"]
@@ -52,7 +52,9 @@ class PostListView(generic.ListView):
 
 
 class PostDetailView(generic.DetailView):
-    model = Post
+    queryset = Post.objects.select_related("author").prefetch_related(
+        "images", "comments__author"
+    )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -146,15 +148,15 @@ def delete_comment(request, pk):
 @login_required
 def toggle_reaction(request, pk, reaction):
     post = get_object_or_404(Post, pk=pk)
-    like, created = Like.objects.get_or_create(
+    Reaction, created = Reaction.objects.get_or_create(
         user=request.user, post=post, defaults={"reaction": reaction}
     )
     if not created:
-        if like.reaction == reaction:
-            like.delete()
+        if Reaction.reaction == reaction:
+            Reaction.delete()
         else:
-            like.reaction = reaction
-            like.save()
+            Reaction.reaction = reaction
+            Reaction.save()
     return redirect("feed:post-detail", pk=pk)
 
 
@@ -177,9 +179,11 @@ class UserDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["posts"] = self.object.posts.order_by("-created_at")
+        context["posts"] = self.object.posts.select_related(
+            "author"
+        ).order_by("-created_at")
         context["reposts"] = self.object.reposts.select_related(
-            "original_post"
+            "original_post__author"
         ).order_by("-created_at")
         return context
 

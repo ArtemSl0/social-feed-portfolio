@@ -17,11 +17,11 @@ class Post(models.Model):
 
     @property
     def likes_count(self):
-        return self.likes.filter(reaction=Like.LIKE).count()
+        return self.reactions.filter(reaction=Reaction.LIKE).count()
 
     @property
     def dislikes_count(self):
-        return self.likes.filter(reaction=Like.DISLIKE).count()
+        return self.reactions.filter(reaction=Reaction.DISLIKE).count()
 
     @property
     def is_edited(self):
@@ -59,7 +59,7 @@ class Comment(models.Model):
         return f"{self.author}: {self.post}"
 
 
-class Like(models.Model):
+class Reaction(models.Model):
     LIKE = "like"
     DISLIKE = "dislike"
     REACTION_CHOICES = [
@@ -67,10 +67,10 @@ class Like(models.Model):
         (DISLIKE, "Dislike"),
     ]
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="likes"
+        User, on_delete=models.CASCADE, related_name="reactions"
     )
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name="likes"
+        Post, on_delete=models.CASCADE, related_name="reactions"
     )
     reaction = models.CharField(max_length=10, choices=REACTION_CHOICES)
 
