@@ -148,15 +148,15 @@ def delete_comment(request, pk):
 @login_required
 def toggle_reaction(request, pk, reaction):
     post = get_object_or_404(Post, pk=pk)
-    Reaction, created = Reaction.objects.get_or_create(
+    Reaction_act, created = Reaction.objects.get_or_create(
         user=request.user, post=post, defaults={"reaction": reaction}
     )
     if not created:
-        if Reaction.reaction == reaction:
-            Reaction.delete()
+        if Reaction_act.reaction == reaction:
+            Reaction_act.delete()
         else:
-            Reaction.reaction = reaction
-            Reaction.save()
+            Reaction_act.reaction = reaction
+            Reaction_act.save()
     return redirect("feed:post-detail", pk=pk)
 
 
