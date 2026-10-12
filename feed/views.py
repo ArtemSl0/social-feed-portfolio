@@ -137,40 +137,40 @@ class CommentCreateView(LoginRequiredMixin, generic.CreateView):
         )
 
 
-@login_required
-def delete_comment(request, pk):
-    comment = get_object_or_404(Comment, pk=pk, author=request.user)
-    post_pk = comment.post_id
-    comment.delete()
-    return redirect("feed:post-detail", pk=post_pk)
+class DeleteCommentView(LoginRequiredMixin, generic.View):
+    def post(self, request, pk):
+        comment = get_object_or_404(Comment, pk=pk, author=request.user)
+        post_pk = comment.post_id
+        comment.delete()
+        return redirect("feed:post-detail", pk=post_pk)
 
 
-@login_required
-def toggle_reaction(request, pk, reaction):
-    post = get_object_or_404(Post, pk=pk)
-    user_reaction, created = Reaction.objects.get_or_create(
-        user=request.user, post=post, defaults={"reaction": reaction}
-    )
-    if not created:
-        if user_reaction.reaction == reaction:
-            user_reaction.delete()
+class ToggleReactionView(LoginRequiredMixin, generic.View):
+    def post(self, request, pk, reaction):
+        post = get_object_or_404(Post, pk=pk)
+        user_reaction, created = Reaction.objects.get_or_create(
+            user=request.user, post=post, defaults={"reaction": reaction}
+        )
+        if not created:
+            if user_reaction.reaction == reaction:
+                user_reaction.delete()
+            else:
+                user_reaction.reaction = reaction
+                user_reaction.save()
+        return redirect("feed:post-detail", pk=pk)
+
+
+class ToggleRepostView(LoginRequiredMixin, generic.View):
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        repost = Repost.objects.filter(
+            user=request.user, original_post=post
+        ).first()
+        if repost:
+            repost.delete()
         else:
-            user_reaction.reaction = reaction
-            user_reaction.save()
-    return redirect("feed:post-detail", pk=pk)
-
-
-@login_required
-def toggle_repost(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    repost = Repost.objects.filter(
-        user=request.user, original_post=post
-    ).first()
-    if repost:
-        repost.delete()
-    else:
-        Repost.objects.create(user=request.user, original_post=post)
-    return redirect("feed:post-detail", pk=pk)
+            Repost.objects.create(user=request.user, original_post=post)
+        return redirect("feed:post-detail", pk=pk)
 
 
 class UserDetailView(generic.DetailView):

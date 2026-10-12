@@ -5,13 +5,13 @@ from feed.views import (
     PostDetailView,
     PostCreateView,
     CommentCreateView,
-    toggle_reaction,
-    toggle_repost,
     PostUpdateView,
     PostDeleteView,
     UserDetailView,
-    delete_comment,
-    ProfileUpdateView
+    DeleteCommentView,
+    ToggleReactionView,
+    ToggleRepostView,
+    ProfileUpdateView,
 )
 
 urlpatterns = [
@@ -25,12 +25,12 @@ urlpatterns = [
     ),
     path(
         "posts/<int:pk>/react/<str:reaction>/",
-        toggle_reaction,
+        ToggleReactionView.as_view(),
         name="toggle-reaction",
     ),
     path(
         "posts/<int:pk>/repost/",
-        toggle_repost,
+        ToggleRepostView.as_view(),
         name="toggle-repost",
     ),
     path(
@@ -50,7 +50,7 @@ urlpatterns = [
     ),
     path(
         "comments/<int:pk>/delete/",
-        delete_comment,
+        DeleteCommentView.as_view(),
         name="comment-delete",
     ),
     path(
