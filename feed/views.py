@@ -10,15 +10,12 @@ from django.urls import reverse_lazy
 from django.db.models import Q
 
 from feed.forms import (
-    UserRegistrationForm,
     PostForm,
     CommentForm,
     PostSearchForm,
-    ProfileUpdateForm
 )
 from feed.models import (
     Post,
-    User,
     Comment,
     Reaction,
     Repost,
@@ -60,13 +57,6 @@ class PostDetailView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         context["comment_form"] = CommentForm()
         return context
-
-
-class RegisterView(generic.CreateView):
-    model = User
-    form_class = UserRegistrationForm
-    success_url = reverse_lazy("login")
-    template_name = "registration/register.html"
 
 
 def save_uploaded_images(request, post):
@@ -171,32 +161,3 @@ class ToggleRepostView(LoginRequiredMixin, generic.View):
         else:
             Repost.objects.create(user=request.user, original_post=post)
         return redirect("feed:post-detail", pk=pk)
-
-
-class UserDetailView(generic.DetailView):
-    model = User
-    context_object_name = "profile_user"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["posts"] = self.object.posts.select_related(
-            "author"
-        ).order_by("-created_at")
-        context["reposts"] = self.object.reposts.select_related(
-            "original_post__author"
-        ).order_by("-created_at")
-        return context
-
-
-class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
-    model = User
-    form_class = ProfileUpdateForm
-    template_name = "feed/profile_form.html"
-
-    def get_object(self, queryset=None):
-        return self.request.user
-
-    def get_success_url(self):
-        return reverse_lazy(
-            "feed:user-detail", kwargs={"pk": self.request.user.pk}
-        )

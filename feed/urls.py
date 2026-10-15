@@ -7,11 +7,9 @@ from feed.views import (
     CommentCreateView,
     PostUpdateView,
     PostDeleteView,
-    UserDetailView,
     DeleteCommentView,
     ToggleReactionView,
     ToggleRepostView,
-    ProfileUpdateView,
 )
 
 urlpatterns = [
@@ -44,19 +42,9 @@ urlpatterns = [
         name="post-delete",
     ),
     path(
-        "users/<int:pk>/",
-        UserDetailView.as_view(),
-        name="user-detail",
-    ),
-    path(
         "comments/<int:pk>/delete/",
         DeleteCommentView.as_view(),
         name="comment-delete",
-    ),
-    path(
-        "profile/edit/",
-        ProfileUpdateView.as_view(),
-        name="profile-update",
     ),
 ]
 

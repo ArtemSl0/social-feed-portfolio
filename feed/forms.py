@@ -1,16 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from feed.models import User, Post, Comment
-
-
-class UserRegistrationForm(UserCreationForm):
-    class Meta(UserCreationForm.Meta):
-        model = User
-        fields = UserCreationForm.Meta.fields + ("email", "bio", "avatar")
-        widgets = {
-            "bio": forms.Textarea(attrs={"rows": 3}),
-        }
+from feed.models import Post, Comment
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -75,12 +66,3 @@ class PostSearchForm(forms.Form):
         label="",
         widget=forms.TextInput(attrs={"placeholder": "Search posts..."}),
     )
-
-
-class ProfileUpdateForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ["avatar", "bio", "email"]
-        widgets = {
-            "bio": forms.Textarea(attrs={"rows": 3}),
-        }

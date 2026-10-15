@@ -33,7 +33,7 @@ principles as the Taxi Service project (MVT, CBV, auth, forms, search, tests).
 - `Post`
 - `PostImage`
 - `Comment`
-- `Like` (with a `reaction` field: like/dislike)
+- `Reaction` (with a `reaction` field: like/dislike)
 - `Repost`
 
 ### Tech stack
@@ -45,3 +45,25 @@ Django, Bootstrap 5, django-crispy-forms, Pillow, SQLite
 Covers model string representations, the like/dislike toggle logic 
 (including state switching), repost toggling, and access control for 
 unauthenticated users.
+
+## Running locally
+
+1. Clone the repository and navigate into the project folder.
+2. Create and activate a virtual environment:
+   python -m venv .venv
+   .venv\Scripts\activate   (Windows)
+   source .venv/bin/activate   (macOS/Linux)
+3. Install dependencies:
+   pip install -r requirements.txt
+4. Create a `.env` file in the project root (see `.env.sample` for the list of required variables).
+5. Apply migrations:
+   python manage.py migrate
+6. Create a superuser (optional, for admin access):
+   python manage.py createsuperuser
+7. Run the development server:
+   python manage.py runserver
+8. Open http://127.0.0.1:8000/ in your browser.
+
+## Running tests
+
+python manage.py test

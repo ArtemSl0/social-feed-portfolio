@@ -17,12 +17,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "cloudinary_storage",
     "cloudinary",
+    "accounts",
     "feed",
     "crispy_forms",
     "crispy_bootstrap4",
 ]
 
-AUTH_USER_MODEL = "feed.User"
+AUTH_USER_MODEL = "accounts.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

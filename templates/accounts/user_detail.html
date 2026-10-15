@@ -8,7 +8,7 @@
     <h2>{{ profile_user.username }}</h2>
     <p class="post-meta preserve-newlines">{{ profile_user.bio }}</p>
     {% if user == profile_user %}
-      <a href="{% url 'feed:profile-update' %}" class="btn btn-sm btn-secondary">Edit profile</a>
+      <a href="{% url 'accounts:profile-update' %}" class="btn btn-sm btn-secondary">Edit profile</a>
     {% endif %}
   </div>
 
