@@ -36,6 +36,12 @@ principles as the Taxi Service project (MVT, CBV, auth, forms, search, tests).
 - `Reaction` (with a `reaction` field: like/dislike)
 - `Repost`
 
+### Project structure
+
+- `accounts` app: User model, registration, login, profile pages
+- `feed` app: Post, Comment, Reaction, Repost, and all feed-related views
+![img.png](img.png)
+
 ### Tech stack
 
 Django, Bootstrap 5, django-crispy-forms, Pillow, SQLite
